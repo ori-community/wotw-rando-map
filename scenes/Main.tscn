@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://c1xnpteo6atvc"]
+
+[ext_resource type="PackedScene" uid="uid://ccs75bygv2cx6" path="res://scenes/WotwMap.tscn" id="1_elqb8"]
+[ext_resource type="Script" uid="uid://imy6sqiq04ty" path="res://scenes/Main.gd" id="1_rvslj"]
+
+[node name="Main" type="Control" unique_id=1364075408]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rvslj")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1022705432]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="WotwMap" parent="." unique_id=324143865 instance=ExtResource("1_elqb8")]
+unique_name_in_owner = true
+layout_mode = 1
