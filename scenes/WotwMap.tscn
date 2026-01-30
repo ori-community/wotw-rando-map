@@ -197,6 +197,7 @@
 [ext_resource type="Texture2D" uid="uid://13g0oibsbue8" path="res://assets/wotw-map-tiles/tile-35_3.png" id="195_yvfx2"]
 
 [node name="WotwMap" type="Control" unique_id=1800147214]
+editor_description = "Children added to this node are automatically reparented to the in-game coordinate system."
 clip_contents = true
 layout_mode = 3
 anchors_preset = 15
