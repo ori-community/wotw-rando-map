@@ -1389,4 +1389,5 @@ metadata/_edit_lock_ = true
 position = Vector2(338, 4383)
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="map_in_game_center_changed" from="." to="." method="_on_map_in_game_center_changed"]
 [connection signal="resized" from="." to="." method="_on_resized"]
