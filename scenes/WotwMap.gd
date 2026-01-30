@@ -11,11 +11,13 @@ signal map_in_game_center_changed(center: Vector2)
 
 @onready var origin: Node2D = %Origin
 @onready var in_game_origin: Node2D = %InGameOrigin
+@onready var slot: Node2D = %Slot
 
 
 const SCROLL_ZOOM_SPEED := 0.04
 
 
+var _nodes_to_reparent_to_in_game_origin: Array[Node] = []
 var _is_dragging: bool = false
 var _map_in_game_center_position_cache: Vector2 = Vector2(0, 0)  ## Cache to recenter the map when the control is resized
 var _map_in_game_center_position: Vector2:
@@ -30,6 +32,10 @@ var _map_in_game_center_position: Vector2:
 
 
 func _ready() -> void:
+	for node in _nodes_to_reparent_to_in_game_origin:
+		node.reparent(in_game_origin)
+	_nodes_to_reparent_to_in_game_origin.clear()
+	
 	_map_in_game_center_position_cache = _map_in_game_center_position
 	
 	# Add @tool to this script and reload the scene in the editor
@@ -114,3 +120,8 @@ func _process(delta: float) -> void:
 
 func _on_map_in_game_center_changed(center: Vector2) -> void:
 	_map_in_game_center_position_cache = center
+
+
+func _on_child_entered_tree(node: Node) -> void:
+	if !node.is_in_group("MapOrigin"):
+		_nodes_to_reparent_to_in_game_origin.push_back(node)

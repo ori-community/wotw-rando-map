@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://ccs75bygv2cx6" path="res://scenes/WotwMap.tscn" id="1_elqb8"]
 [ext_resource type="Script" uid="uid://imy6sqiq04ty" path="res://scenes/Main.gd" id="1_rvslj"]
+[ext_resource type="PackedScene" uid="uid://kssowhh04cpn" path="res://scenes/PerformanceTestLine.tscn" id="3_0bbpv"]
 
 [node name="Main" type="Control" unique_id=1364075408]
 layout_mode = 3
@@ -24,3 +25,6 @@ color = Color(0, 0, 0, 1)
 [node name="WotwMap" parent="." unique_id=324143865 instance=ExtResource("1_elqb8")]
 unique_name_in_owner = true
 layout_mode = 1
+
+[node name="PerformanceTestLine" parent="WotwMap" unique_id=1108690817 instance=ExtResource("3_0bbpv")]
+position = Vector2(508, 320)
