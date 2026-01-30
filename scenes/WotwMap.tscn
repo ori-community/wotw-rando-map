@@ -209,10 +209,12 @@ script = ExtResource("1_337id")
 
 [node name="Origin" type="Node2D" parent="." unique_id=740566307]
 unique_name_in_owner = true
-position = Vector2(103, -4017)
+editor_description = "The Origin represents the Map Viewport origin. This is not in in-game coordinates."
+position = Vector2(1065, -3954)
 
 [node name="InGameOrigin" type="Node2D" parent="Origin" unique_id=854396293]
 unique_name_in_owner = true
+editor_description = "The In-Game Origin represents the (0, 0) position of in-game coordinates. Everything inside this is in in-game coordinates."
 scale = Vector2(1, -1)
 
 [node name="Tiles" type="Node2D" parent="Origin/InGameOrigin" unique_id=1826790488]
@@ -1387,3 +1389,4 @@ metadata/_edit_lock_ = true
 position = Vector2(338, 4383)
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="resized" from="." to="." method="_on_resized"]
