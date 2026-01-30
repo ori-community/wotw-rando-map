@@ -33,7 +33,7 @@ var _map_in_game_center_position: Vector2:
 
 func _ready() -> void:
 	for node in _nodes_to_reparent_to_in_game_origin:
-		node.reparent(in_game_origin, false)
+		node.reparent(slot, false)
 	_nodes_to_reparent_to_in_game_origin.clear()
 	
 	_map_in_game_center_position_cache = _map_in_game_center_position
