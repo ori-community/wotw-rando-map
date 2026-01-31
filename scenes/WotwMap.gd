@@ -124,4 +124,7 @@ func _on_map_in_game_center_changed(center: Vector2) -> void:
 
 func _on_child_entered_tree(node: Node) -> void:
 	if !node.is_in_group("MapOrigin"):
-		_nodes_to_reparent_to_in_game_origin.push_back(node)
+		if is_node_ready():
+			node.reparent(slot, false)
+		else:
+			_nodes_to_reparent_to_in_game_origin.push_back(node)
