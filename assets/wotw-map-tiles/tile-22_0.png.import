@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/tile-22_0.png-0f23fa1bc50ab7e96c9a2a10aa8c6d1
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
