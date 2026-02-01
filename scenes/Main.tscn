@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://ccs75bygv2cx6" path="res://scenes/WotwMap.tscn" id="1_elqb8"]
 [ext_resource type="Script" uid="uid://imy6sqiq04ty" path="res://scenes/Main.gd" id="1_rvslj"]
+[ext_resource type="PackedScene" uid="uid://fndd7f35yuum" path="res://scenes/EventsView.tscn" id="3_0bbpv"]
 
 [node name="Main" type="Control" unique_id=1364075408]
 layout_mode = 3
@@ -24,3 +25,27 @@ color = Color(0, 0, 0, 1)
 [node name="WotwMap" parent="." unique_id=324143865 instance=ExtResource("1_elqb8")]
 unique_name_in_owner = true
 layout_mode = 1
+
+[node name="EventsView" parent="WotwMap" unique_id=110558812 instance=ExtResource("3_0bbpv")]
+unique_name_in_owner = true
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1785859688]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="TimeSlider" type="HSlider" parent="MarginContainer" unique_id=1189300682]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 8
+step = 0.0
+
+[connection signal="value_changed" from="MarginContainer/TimeSlider" to="." method="_on_time_slider_value_changed"]

@@ -2,41 +2,61 @@ extends RefCounted
 class_name WotwEventsStreamReader
 
 
-var _data: PackedByteArray
-var _reader: StreamReader
+var stream: EventsStream = EventsStream.new()
 
 
-func _init(data: PackedByteArray) -> void:
-	_data = data
-	_reader = StreamReader.new(_data)
-
-
-func read() -> Array[PackedVector2Array]:
-	var lines: Array[PackedVector2Array] = []
-	var current_line := PackedVector2Array()
+## Reads events from a chunk of event data and appends it to the stored
+## events (segments, timeline_entries, map_entries)
+func append_events(data: PackedByteArray) -> void:
+	var reader := StreamReader.new(data)
 	
-	while _reader.available():
-		var event_type := _reader.read_u64()
-		var event_time := _reader.read_f32()
+	var current_segment: EventsStream.PathSegment
+	var current_segment_finalized := false  # Whether current_segment was added to the segments list
+	
+	# If we don't have any segments yet, create a new one
+	if stream.segments.is_empty():
+		current_segment = EventsStream.PathSegment.new()
+	else:
+		current_segment = stream.segments[stream.segments.size() - 1]
+		current_segment_finalized = true
+	
+	var last_event_time: float = stream.in_game_time_end
+	while reader.available():
+		var event_type := reader.read_u64()
+		last_event_time = reader.read_f32()
+		
+		assert(last_event_time >= stream.in_game_time_end, "Non-linear events stream detected")
 		
 		match event_type:
 			0:
-				var position := Vector2(_reader.read_f32(), _reader.read_f32())
-				current_line.push_back(position)
+				var position := Vector2(reader.read_f32(), reader.read_f32())
+				current_segment.points.push_back(position)
+				current_segment.in_game_times.push_back(last_event_time)
 			1:
-				var type := _reader.read_i32()
-				var from := Vector2(_reader.read_f32(), _reader.read_f32())
-				var to := Vector2(_reader.read_f32(), _reader.read_f32())
-				var time_lost := _reader.read_f32()
+				var _type := reader.read_i32()
+				var from := Vector2(reader.read_f32(), reader.read_f32())
+				var to := Vector2(reader.read_f32(), reader.read_f32())
+				var _time_lost := reader.read_f32()
 				
-				current_line.push_back(from)
-				lines.push_back(current_line)
-				current_line = PackedVector2Array()
-				current_line.push_back(to)
+				current_segment.points.push_back(from)
+				current_segment.in_game_times.push_back(last_event_time)
+				if !current_segment_finalized:
+					stream.segments.push_back(current_segment)
+				
+				current_segment = EventsStream.PathSegment.new()
+				current_segment_finalized = false
+				
+				current_segment.points.push_back(to)
+				current_segment.in_game_times.push_back(last_event_time)
 			2:
-				var label := _reader.read_string_with_length()
-				var icon := _reader.read_string_with_length()
+				var _label := reader.read_string_with_length()
+				var _icon := reader.read_string_with_length()
 			3:
-				var label := _reader.read_string_with_length()
-				var icon := _reader.read_string_with_length()
-	return lines
+				var _label := reader.read_string_with_length()
+				var _icon := reader.read_string_with_length()
+	
+	# If theres still a segment active, add it
+	if !current_segment_finalized && !current_segment.points.is_empty():
+		stream.segments.push_back(current_segment)
+	
+	stream.in_game_time_end = last_event_time

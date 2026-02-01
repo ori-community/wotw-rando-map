@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://0g8nm2g4kvid"]
+
+[ext_resource type="Script" uid="uid://b8ativ0w4yeqg" path="res://scenes/PathSegmentLine.gd" id="1_ap608"]
+
+[sub_resource type="Curve" id="Curve_ap608"]
+_data = [Vector2(0, 0.0024158955), 0.0, 1.2651293, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="PathSegmentLine" type="Line2D" unique_id=2021850788]
+width = 3.0
+default_color = Color(0.17315191, 0.50227803, 0.8410065, 1)
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true
+script = ExtResource("1_ap608")
+width_curve_when_max_length_time_enabled = SubResource("Curve_ap608")

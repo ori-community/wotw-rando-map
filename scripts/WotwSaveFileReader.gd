@@ -29,10 +29,10 @@ func read_events_stream() -> PackedByteArray:
 		push_error("Incompatible save file version %s" % version)
 		return PackedByteArray()
 	
-	var guid_a := _reader.read_i32()
-	var guid_b := _reader.read_i32()
-	var guid_c := _reader.read_i32()
-	var guid_d := _reader.read_i32()
+	var _guid_a := _reader.read_i32()
+	var _guid_b := _reader.read_i32()
+	var _guid_c := _reader.read_i32()
+	var _guid_d := _reader.read_i32()
 	
 	var slots_count := _reader.read_i32()
 	for i in range(slots_count):
