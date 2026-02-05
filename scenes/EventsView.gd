@@ -18,6 +18,11 @@ var slice_end_time: float = INF:
 		slice_end_time = value
 		for line in segment_lines:
 			line.slice_end_time = value 
+var fade_out: bool = true:
+	set(value):
+		fade_out = value
+		for line in segment_lines:
+			line.max_length_time = 10 if value else INF
 var stream: EventsStream = null:
 	set(value):
 		stream = value

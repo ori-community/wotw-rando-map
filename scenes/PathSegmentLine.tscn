@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://0g8nm2g4kvid"]
 
-[ext_resource type="Script" uid="uid://b8ativ0w4yeqg" path="res://scenes/PathSegmentLine.gd" id="1_ap608"]
+[ext_resource type="Script" path="res://scenes/PathSegmentLine.gd" id="1_ap608"]
 
 [sub_resource type="Curve" id="Curve_ap608"]
 _data = [Vector2(0, 0.0024158955), 0.0, 1.2651293, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
