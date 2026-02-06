@@ -47,14 +47,14 @@ theme_override_constants/margin_bottom = 24
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="HContainerBottom" type="HBoxContainer" parent="MarginContainer/VContainerBottom" unique_id=995774292]
+[node name="HContainerControls" type="HBoxContainer" parent="MarginContainer/VContainerBottom" unique_id=995774292]
 layout_mode = 2
 
-[node name="HContainerLeft" type="HBoxContainer" parent="MarginContainer/VContainerBottom/HContainerBottom" unique_id=1706166655]
+[node name="HContainerLeft" type="HBoxContainer" parent="MarginContainer/VContainerBottom/HContainerControls" unique_id=1706166655]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="PlayButton" type="TextureButton" parent="MarginContainer/VContainerBottom/HContainerBottom/HContainerLeft" unique_id=244655765]
+[node name="PlayButton" type="TextureButton" parent="MarginContainer/VContainerBottom/HContainerControls/HContainerLeft" unique_id=244655765]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
@@ -64,7 +64,7 @@ texture_normal = ExtResource("4_rarhs")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="SpeedSlider" type="HSlider" parent="MarginContainer/VContainerBottom/HContainerBottom/HContainerLeft" unique_id=2028721729]
+[node name="SpeedSlider" type="HSlider" parent="MarginContainer/VContainerBottom/HContainerControls/HContainerLeft" unique_id=2028721729]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -78,35 +78,47 @@ tick_count = 5
 ticks_on_borders = true
 ticks_position = 1
 
-[node name="SpeedLabel" type="Label" parent="MarginContainer/VContainerBottom/HContainerBottom/HContainerLeft" unique_id=1304205]
+[node name="SpeedLabel" type="Label" parent="MarginContainer/VContainerBottom/HContainerControls/HContainerLeft" unique_id=1304205]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Speedx"
 
-[node name="VContainerRight" type="VBoxContainer" parent="MarginContainer/VContainerBottom/HContainerBottom" unique_id=1602875439]
+[node name="VContainerRight" type="VBoxContainer" parent="MarginContainer/VContainerBottom/HContainerControls" unique_id=1602875439]
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="HContainerFadeOut" type="HBoxContainer" parent="MarginContainer/VContainerBottom/HContainerBottom/VContainerRight" unique_id=335419853]
+[node name="HContainerFadeOut" type="HBoxContainer" parent="MarginContainer/VContainerBottom/HContainerControls/VContainerRight" unique_id=335419853]
 layout_mode = 2
 
-[node name="FadeOutLabel" type="Label" parent="MarginContainer/VContainerBottom/HContainerBottom/VContainerRight/HContainerFadeOut" unique_id=1025074201]
+[node name="FadeOutLabel" type="Label" parent="MarginContainer/VContainerBottom/HContainerControls/VContainerRight/HContainerFadeOut" unique_id=1025074201]
 layout_mode = 2
 text = "Fade Out "
+horizontal_alignment = 2
 
-[node name="FadeOutButton" type="CheckButton" parent="MarginContainer/VContainerBottom/HContainerBottom/VContainerRight/HContainerFadeOut" unique_id=360782043]
+[node name="FadeOutButton" type="CheckButton" parent="MarginContainer/VContainerBottom/HContainerControls/VContainerRight/HContainerFadeOut" unique_id=360782043]
 layout_mode = 2
 button_pressed = true
 
-[node name="TimeSlider" type="HSlider" parent="MarginContainer/VContainerBottom" unique_id=1189300682]
+[node name="HContainerSlider" type="HBoxContainer" parent="MarginContainer/VContainerBottom" unique_id=431114483]
+layout_mode = 2
+
+[node name="TimeSlider" type="HSlider" parent="MarginContainer/VContainerBottom/HContainerSlider" unique_id=1189300682]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 8
+size_flags_horizontal = 3
+size_flags_vertical = 4
 step = 0.0
 
-[connection signal="pressed" from="MarginContainer/VContainerBottom/HContainerBottom/HContainerLeft/PlayButton" to="." method="_on_button_pressed"]
-[connection signal="value_changed" from="MarginContainer/VContainerBottom/HContainerBottom/HContainerLeft/SpeedSlider" to="." method="_on_speed_slider_value_changed"]
-[connection signal="toggled" from="MarginContainer/VContainerBottom/HContainerBottom/VContainerRight/HContainerFadeOut/FadeOutButton" to="." method="_on_fade_out_button_toggled"]
-[connection signal="drag_ended" from="MarginContainer/VContainerBottom/TimeSlider" to="." method="_on_time_slider_drag_ended"]
-[connection signal="drag_started" from="MarginContainer/VContainerBottom/TimeSlider" to="." method="_on_time_slider_drag_started"]
-[connection signal="value_changed" from="MarginContainer/VContainerBottom/TimeSlider" to="." method="_on_time_slider_value_changed"]
+[node name="TimeLabel" type="Label" parent="MarginContainer/VContainerBottom/HContainerSlider" unique_id=257079204]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+horizontal_alignment = 2
+
+[connection signal="pressed" from="MarginContainer/VContainerBottom/HContainerControls/HContainerLeft/PlayButton" to="." method="_on_button_pressed"]
+[connection signal="value_changed" from="MarginContainer/VContainerBottom/HContainerControls/HContainerLeft/SpeedSlider" to="." method="_on_speed_slider_value_changed"]
+[connection signal="toggled" from="MarginContainer/VContainerBottom/HContainerControls/VContainerRight/HContainerFadeOut/FadeOutButton" to="." method="_on_fade_out_button_toggled"]
+[connection signal="drag_ended" from="MarginContainer/VContainerBottom/HContainerSlider/TimeSlider" to="." method="_on_time_slider_drag_ended"]
+[connection signal="drag_started" from="MarginContainer/VContainerBottom/HContainerSlider/TimeSlider" to="." method="_on_time_slider_drag_started"]
+[connection signal="value_changed" from="MarginContainer/VContainerBottom/HContainerSlider/TimeSlider" to="." method="_on_time_slider_value_changed"]
