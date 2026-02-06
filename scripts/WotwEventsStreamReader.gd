@@ -22,7 +22,7 @@ func append_events(data: PackedByteArray) -> void:
 	
 	var last_event_time: float = stream.in_game_time_end
 	while reader.available():
-		var event_type := reader.read_u64()
+		var event_type := reader.read_u32()
 		last_event_time = reader.read_f32()
 		
 		assert(last_event_time >= stream.in_game_time_end, "Non-linear events stream detected")
@@ -33,7 +33,7 @@ func append_events(data: PackedByteArray) -> void:
 				current_segment.points.push_back(position)
 				current_segment.in_game_times.push_back(last_event_time)
 			1:
-				var _type := reader.read_i32()
+				var _type := reader.read_u32()
 				var from := Vector2(reader.read_f32(), reader.read_f32())
 				var to := Vector2(reader.read_f32(), reader.read_f32())
 				var _time_lost := reader.read_f32()
