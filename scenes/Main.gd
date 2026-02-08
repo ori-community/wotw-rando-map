@@ -4,9 +4,10 @@ extends Control
 @onready var events_view: EventsView = %EventsView
 @onready var time_slider: HSlider = %TimeSlider
 @onready var speed_slider: HSlider = %SpeedSlider
-@onready var play_button: TextureButton = %ButtonPlay
+@onready var play_button: TextureButton = %PlayButton
 @onready var speed_label: Label = %SpeedLabel
 @onready var time_label: Label = %TimeLabel
+@onready var follow_player_button: CheckButton = %FollowPlayerButton
 
 var is_playing = false:
 	set(value):
@@ -35,6 +36,8 @@ func _process(_delta: float) -> void:
 		time_slider.value += _delta * speed_slider.value
 		if time_slider.value >= time_slider.max_value:
 			is_playing = false
+	if is_playing && follow_player_button.button_pressed:
+		wotw_map.zoom_on([events_view.get_positions_at(time_slider.value)])
 
 func update_time_label() -> void:
 	time_label.text = str(TimeUtils.format_time(time_slider.value), " / ", TimeUtils.format_time(time_slider.max_value))

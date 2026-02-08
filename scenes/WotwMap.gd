@@ -44,9 +44,7 @@ func _ready() -> void:
 	_nodes_to_reparent_to_in_game_origin.clear()
 	
 	_map_in_game_center_position_cache = _map_in_game_center_position
-	
-	zoom_to_fit(true)
-	
+		
 	# Add @tool to this script and reload the scene in the editor
 	# to regenerate map tile sprites.
 	if Engine.is_editor_hint() && get_child_count() == 0:
@@ -154,11 +152,11 @@ func center_on(center: Vector2, instantly: bool = false, scale: float = origin.s
 	
 func zoom_on(points: Array[Vector2], instantly: bool = false):
 	if points.size() == 0:
-		pass
+		return
 	
 	if points.size() == 1:
 		center_on(points[0], instantly)
-		pass
+		return
 	
 	var rect:= Rect2(points[0], Vector2.ZERO)
 	

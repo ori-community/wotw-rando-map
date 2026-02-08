@@ -51,3 +51,29 @@ func _update_segment_lines() -> void:
 		line.segment = segment
 		segment_lines_container.add_child(line)
 		segment_lines.push_back(line)
+
+
+func _get_path_segment_with_time(target_time: float) -> EventsStream.PathSegment:
+	var index = stream.segments.find_custom(func (seg: EventsStream.PathSegment) -> bool:
+		return target_time >= seg.start_time() and target_time <= seg.end_time()
+	)
+	return stream.segments[index] if index >= 0 else null
+
+
+func get_positions_at(target_time: float) -> Vector2:
+	var segment = _get_path_segment_with_time(target_time)
+	var left := 0
+	var right :int = segment.in_game_times.size() - 1
+	var event_index := -1
+
+	while left <= right:
+		var mid := (left + right) / 2
+
+		if segment.in_game_times[mid] < target_time:
+			event_index = mid
+			left = mid + 1
+		else:
+			right = mid - 1
+
+	return segment.points[event_index]
+	
