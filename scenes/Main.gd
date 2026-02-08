@@ -44,7 +44,7 @@ func _on_time_slider_value_changed(value: float) -> void:
 	events_view.slice_end_time = value
 	
 func _on_button_pressed() -> void:
-	is_playing = !is_playing
+	wotw_map.zoom_to_fit()
 
 func _on_time_slider_drag_started() -> void:
 	sliders_gets_dragged = true
@@ -63,3 +63,7 @@ func _on_button_beginning_pressed() -> void:
 
 func _on_button_end_pressed() -> void:
 	time_slider.value = time_slider.max_value
+
+
+func _on_button_play_pressed() -> void:
+	is_playing = !is_playing

@@ -8,6 +8,8 @@ signal map_in_game_center_changed(center: Vector2)
 @export var drag_limit_top_left := Vector2(-2023, -3423)  ## Top-left drag limit of the map center in in-game coordinates
 @export var drag_limit_bottom_right := Vector2(2382, -4656)  ## Bottom-right drag limit of the map center in in-game coordinates
 
+@export var map_top_left := Vector2(0, 0)
+@export var map_bottm_right := Vector2(0, 0)
 
 @onready var origin: Node2D = %Origin
 @onready var in_game_origin: Node2D = %InGameOrigin
@@ -16,7 +18,6 @@ signal map_in_game_center_changed(center: Vector2)
 
 const SCROLL_ZOOM_SPEED := 0.04
 
-
 var _nodes_to_reparent_to_in_game_origin: Array[Node] = []
 var _is_dragging: bool = false
 var _map_in_game_center_position_cache: Vector2 = Vector2(0, 0)  ## Cache to recenter the map when the control is resized
@@ -24,13 +25,19 @@ var _map_in_game_center_position: Vector2:
 	set(value):
 		_map_in_game_center_position_cache = value
 		if is_node_ready():
-			var position_offset := get_global_rect().get_center() - in_game_origin.to_global(value)
-			origin.position += position_offset
+			_update_map_position(value)
 		map_in_game_center_changed.emit(value)
 	get():
 		return in_game_origin.to_local(get_global_rect().get_center())
-
-
+var _map_scale: Vector2:
+	set(value):
+		if is_node_ready():
+			var current_center = _map_in_game_center_position
+			origin.scale = value
+			_update_map_position(current_center)
+	get():
+		return origin.scale
+		
 func _ready() -> void:
 	for node in _nodes_to_reparent_to_in_game_origin:
 		node.reparent(slot, false)
@@ -38,10 +45,13 @@ func _ready() -> void:
 	
 	_map_in_game_center_position_cache = _map_in_game_center_position
 	
+	zoom_to_fit(true)
+	
 	# Add @tool to this script and reload the scene in the editor
 	# to regenerate map tile sprites.
 	if Engine.is_editor_hint() && get_child_count() == 0:
 		_editor_create_map_tiles()
+		
 
 
 func _editor_create_map_tiles() -> void:
@@ -96,6 +106,10 @@ func _on_gui_input(event: InputEvent) -> void:
 func _on_resized() -> void:
 	_map_in_game_center_position = _map_in_game_center_position_cache
 
+	
+func _update_map_position(center: Vector2):
+	var position_offset := get_global_rect().get_center() - in_game_origin.to_global(center)
+	origin.position += position_offset
 
 func _process(delta: float) -> void:
 	# Clamp map to drag limits
@@ -116,8 +130,7 @@ func _process(delta: float) -> void:
 				_map_in_game_center_position = clamped_map_center_position
 			else:
 				_map_in_game_center_position = new_position
-
-
+					
 func _on_map_in_game_center_changed(center: Vector2) -> void:
 	_map_in_game_center_position_cache = center
 
@@ -128,3 +141,39 @@ func _on_child_entered_tree(node: Node) -> void:
 			node.reparent(slot, false)
 		else:
 			_nodes_to_reparent_to_in_game_origin.push_back(node)
+
+
+func center_on(center: Vector2, instantly: bool = false, scale: float = origin.scale.x):
+	if instantly:
+		_map_in_game_center_position = center
+		_map_scale = Vector2(scale, scale)
+	else:
+		create_tween().tween_property(self, "_map_in_game_center_position", center, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		create_tween().tween_property(self, "_map_scale", Vector2(scale, scale), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	
+	
+func zoom_on(points: Array[Vector2], instantly: bool = false):
+	if points.size() == 0:
+		pass
+	
+	if points.size() == 1:
+		center_on(points[0], instantly)
+		pass
+	
+	var rect:= Rect2(points[0], Vector2.ZERO)
+	
+	for point in points.slice(1):
+		rect = rect.expand(point)
+	
+	var screen_rect = in_game_origin.global_transform * rect
+
+	var scaleX = origin.scale.x / (screen_rect.size.x / self.size.x)
+	var scaleY = origin.scale.y / (screen_rect.size.y / self.size.y)
+	var min_scale = min(scaleX, scaleY)
+	
+	center_on(rect.get_center(), instantly, min_scale)
+
+
+func zoom_to_fit(instantly: bool = false):
+	zoom_on([map_top_left, map_bottm_right], instantly)
+	

@@ -21,7 +21,7 @@ TimeUtils="*uid://ccwtmn5fbvaxj"
 
 [display]
 
-window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [editor]
 

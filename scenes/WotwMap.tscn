@@ -206,6 +206,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_337id")
+drag_limit_top_left = null
+drag_limit_bottom_right = null
+map_top_left = Vector2(-2015.261, -3550)
+map_bottm_right = Vector2(2390, -4650)
 
 [node name="Origin" type="Node2D" parent="." unique_id=740566307 groups=["MapOrigin"]]
 unique_name_in_owner = true
