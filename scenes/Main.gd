@@ -15,6 +15,7 @@ var is_playing = false:
 		if value:
 			play_button.texture_normal = preload("res://assets/ui/Pause.svg")
 		else:
+			wotw_map.follow_center = Vector2.INF
 			play_button.texture_normal = preload("res://assets/ui/Play.svg")
 		
 var sliders_gets_dragged = false
@@ -37,14 +38,20 @@ func _process(_delta: float) -> void:
 		if time_slider.value >= time_slider.max_value:
 			is_playing = false
 	if is_playing && follow_player_button.button_pressed:
-		wotw_map.zoom_on([events_view.get_positions_at(time_slider.value)])
+		zoom_on_players()
 
 func update_time_label() -> void:
 	time_label.text = str(TimeUtils.format_time(time_slider.value), " / ", TimeUtils.format_time(time_slider.max_value))
 
+
+func zoom_on_players():
+	wotw_map.follow_center = events_view.get_positions_at(time_slider.value)
+
 func _on_time_slider_value_changed(value: float) -> void:
 	update_time_label()
 	events_view.slice_end_time = value
+	if follow_player_button.button_pressed:
+		zoom_on_players()
 	
 func _on_button_pressed() -> void:
 	wotw_map.zoom_to_fit()
@@ -67,6 +74,9 @@ func _on_button_beginning_pressed() -> void:
 func _on_button_end_pressed() -> void:
 	time_slider.value = time_slider.max_value
 
-
 func _on_button_play_pressed() -> void:
 	is_playing = !is_playing
+
+func _on_follow_player_button_toggled(toggled_on: bool) -> void:
+	if !toggled_on:
+		wotw_map.follow_center = Vector2.INF

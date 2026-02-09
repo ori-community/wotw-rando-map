@@ -207,6 +207,7 @@ text = "10.0x"
 horizontal_alignment = 2
 
 [connection signal="pressed" from="MarginContainer/VContainerBottom/HContainerControls/VContainerLeft/ButtonZoomToFit" to="." method="_on_button_pressed"]
+[connection signal="toggled" from="MarginContainer/VContainerBottom/HContainerControls/VContainerRight/HContainerFollowPlayer/FollowPlayerButton" to="." method="_on_follow_player_button_toggled"]
 [connection signal="toggled" from="MarginContainer/VContainerBottom/HContainerControls/VContainerRight/HContainerFadeOut/FadeOutButton" to="." method="_on_fade_out_button_toggled"]
 [connection signal="drag_ended" from="MarginContainer/VContainerBottom/Container/MContainer/VBoxContainer/TimeSlider" to="." method="_on_time_slider_drag_ended"]
 [connection signal="drag_started" from="MarginContainer/VContainerBottom/Container/MContainer/VBoxContainer/TimeSlider" to="." method="_on_time_slider_drag_started"]

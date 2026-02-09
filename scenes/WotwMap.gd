@@ -37,6 +37,7 @@ var _map_scale: Vector2:
 			_update_map_position(current_center)
 	get():
 		return origin.scale
+var follow_center:= Vector2.INF
 		
 func _ready() -> void:
 	for node in _nodes_to_reparent_to_in_game_origin:
@@ -110,6 +111,16 @@ func _update_map_position(center: Vector2):
 	origin.position += position_offset
 
 func _process(delta: float) -> void:
+
+	# follow specific point
+	# testing required
+	if follow_center != Vector2.INF:
+		if _map_in_game_center_position.is_equal_approx(follow_center):
+			_map_in_game_center_position = follow_center
+		else:
+			var speed = minf(_map_in_game_center_position.distance_to(follow_center) * 0.01, 5)
+			_map_in_game_center_position = _map_in_game_center_position.lerp(follow_center, clampf(delta * speed, minf(5 * delta, 1.0)  , 1.0))
+			
 	# Clamp map to drag limits
 	if !_is_dragging:
 		var map_in_game_center_position := _map_in_game_center_position
@@ -146,8 +157,8 @@ func center_on(center: Vector2, instantly: bool = false, scale: float = origin.s
 		_map_in_game_center_position = center
 		_map_scale = Vector2(scale, scale)
 	else:
-		create_tween().tween_property(self, "_map_in_game_center_position", center, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-		create_tween().tween_property(self, "_map_scale", Vector2(scale, scale), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		create_tween().tween_property(self, "_map_in_game_center_position", center, 0.6).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		create_tween().tween_property(self, "_map_scale", Vector2(scale, scale), 0.6).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	
 	
 func zoom_on(points: Array[Vector2], instantly: bool = false):
