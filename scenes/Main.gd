@@ -9,16 +9,14 @@ extends Control
 @onready var time_label: Label = %TimeLabel
 @onready var follow_player_button: CheckButton = %FollowPlayerButton
 
-var is_playing = false:
+var _is_playing = false:
 	set(value):
-		is_playing = value
+		_is_playing = value
 		if value:
 			play_button.texture_normal = preload("res://assets/ui/Pause.svg")
 		else:
-			wotw_map.follow_center = Vector2.INF
 			play_button.texture_normal = preload("res://assets/ui/Play.svg")
-		
-var sliders_gets_dragged = false
+var _is_dragging_any_slider = false
 
 func _ready() -> void:
 	speed_label.text = str(speed_slider.value, "x")
@@ -32,51 +30,66 @@ func _ready() -> void:
 	time_slider.max_value = events_stream_reader.stream.in_game_time_end
 	update_time_label()
 
-func _process(_delta: float) -> void:
-	if is_playing && !sliders_gets_dragged:
-		time_slider.value += _delta * speed_slider.value
+
+func _process(delta: float) -> void:
+	# Time progress
+	if _is_playing && !_is_dragging_any_slider:
+		time_slider.value += delta * speed_slider.value
 		if time_slider.value >= time_slider.max_value:
-			is_playing = false
-	if is_playing && follow_player_button.button_pressed:
-		zoom_on_players()
+			_is_playing = false
+	
+	# Follow players
+	if follow_player_button.button_pressed:
+		var current_map_center := wotw_map.map_in_game_center_position
+		var target_map_center := events_view.stream.get_position_at_time(time_slider.value, current_map_center)
+
+		if current_map_center.is_equal_approx(target_map_center):
+			wotw_map.map_in_game_center_position = target_map_center
+		else:
+			var speed := minf(current_map_center.distance_to(target_map_center) * 0.01, 5)
+			wotw_map.map_in_game_center_position = current_map_center.lerp(target_map_center, clampf(delta * speed, minf(5 * delta, 1.0)  , 1.0))
+
 
 func update_time_label() -> void:
-	time_label.text = str(TimeUtils.format_time(time_slider.value), " / ", TimeUtils.format_time(time_slider.max_value))
+	time_label.text = str(StringUtils.format_time(time_slider.value), " / ", StringUtils.format_time(time_slider.max_value))
 
-
-func zoom_on_players():
-	wotw_map.follow_center = events_view.get_positions_at(time_slider.value)
 
 func _on_time_slider_value_changed(value: float) -> void:
 	update_time_label()
 	events_view.slice_end_time = value
-	if follow_player_button.button_pressed:
-		zoom_on_players()
-	
+
+
 func _on_button_pressed() -> void:
 	wotw_map.zoom_to_fit()
 
-func _on_time_slider_drag_started() -> void:
-	sliders_gets_dragged = true
 
-func _on_time_slider_drag_ended(value_changed: bool) -> void:
-	sliders_gets_dragged = false
+func _on_time_slider_drag_started() -> void:
+	_is_dragging_any_slider = true
+
+
+func _on_time_slider_drag_ended(_value_changed: bool) -> void:
+	_is_dragging_any_slider = false
+
 
 func _on_speed_slider_value_changed(value: float) -> void:
 	speed_label.text = str(value, "x")
 
+
 func _on_fade_out_button_toggled(toggled_on: bool) -> void:
 	events_view.fade_out = toggled_on
+
 
 func _on_button_beginning_pressed() -> void:
 	time_slider.value = 0
 
+
 func _on_button_end_pressed() -> void:
 	time_slider.value = time_slider.max_value
 
-func _on_button_play_pressed() -> void:
-	is_playing = !is_playing
 
-func _on_follow_player_button_toggled(toggled_on: bool) -> void:
-	if !toggled_on:
-		wotw_map.follow_center = Vector2.INF
+func _on_button_play_pressed() -> void:
+	_is_playing = !_is_playing
+
+
+func _on_wotw_map_map_dragged() -> void:
+	follow_player_button.button_pressed = false

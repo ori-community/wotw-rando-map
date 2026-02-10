@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://ccs75bygv2cx6" path="res://scenes/WotwMap.tscn" id="1_elqb8"]
 [ext_resource type="Script" uid="uid://imy6sqiq04ty" path="res://scenes/Main.gd" id="1_rvslj"]
-[ext_resource type="PackedScene" path="res://scenes/EventsView.tscn" id="3_0bbpv"]
+[ext_resource type="PackedScene" uid="uid://fndd7f35yuum" path="res://scenes/EventsView.tscn" id="3_0bbpv"]
 [ext_resource type="Texture2D" uid="uid://1t4jdtf66gwr" path="res://assets/ui/FitToScreen.svg" id="4_c01mt"]
 [ext_resource type="Texture2D" uid="uid://dbov4h51d3bln" path="res://assets/ui/Play.svg" id="4_rarhs"]
 [ext_resource type="Texture2D" uid="uid://4j3bdxmh5dfx" path="res://assets/ui/TransitionEnd.svg" id="4_vcsgt"]
@@ -35,8 +35,6 @@ color = Color(0, 0, 0, 1)
 [node name="WotwMap" parent="." unique_id=324143865 instance=ExtResource("1_elqb8")]
 unique_name_in_owner = true
 layout_mode = 1
-drag_limit_top_left = Vector2(-2023, -3423)
-drag_limit_bottom_right = Vector2(2382, -4656)
 
 [node name="EventsView" parent="WotwMap" unique_id=110558812 instance=ExtResource("3_0bbpv")]
 unique_name_in_owner = true
@@ -206,8 +204,8 @@ layout_mode = 2
 text = "10.0x"
 horizontal_alignment = 2
 
+[connection signal="map_dragged" from="WotwMap" to="." method="_on_wotw_map_map_dragged"]
 [connection signal="pressed" from="MarginContainer/VContainerBottom/HContainerControls/VContainerLeft/ButtonZoomToFit" to="." method="_on_button_pressed"]
-[connection signal="toggled" from="MarginContainer/VContainerBottom/HContainerControls/VContainerRight/HContainerFollowPlayer/FollowPlayerButton" to="." method="_on_follow_player_button_toggled"]
 [connection signal="toggled" from="MarginContainer/VContainerBottom/HContainerControls/VContainerRight/HContainerFadeOut/FadeOutButton" to="." method="_on_fade_out_button_toggled"]
 [connection signal="drag_ended" from="MarginContainer/VContainerBottom/Container/MContainer/VBoxContainer/TimeSlider" to="." method="_on_time_slider_drag_ended"]
 [connection signal="drag_started" from="MarginContainer/VContainerBottom/Container/MContainer/VBoxContainer/TimeSlider" to="." method="_on_time_slider_drag_started"]

@@ -1,6 +1,8 @@
-extends Node
+extends Object
+class_name StringUtils
 
-func format_time(value: float) -> String:
+
+static func format_time(value: float) -> String:
 	var total_seconds := int(value)
 	
 	var hours := int(total_seconds / 3600.0)

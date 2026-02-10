@@ -13,6 +13,9 @@ class PathSegment:
 	
 	func end_time() -> float:
 		return in_game_times[in_game_times.size() - 1]
+	
+	func index_at_time(in_game_time: float, before: bool = true) -> int:
+		return in_game_times.bsearch(in_game_time, before)
 
 
 class TimelineEntry:
@@ -50,3 +53,23 @@ var in_game_time_end: float = 0.0  ## The in-game time of the most recent event
 var segments: Array[PathSegment] = []
 var timeline_entries: Array[TimelineEntry] = []
 var map_entries: Array[MapEntry] = []
+
+
+### Returns the PathSegment that contains the given timestamp, or null if no
+### segment exists at the given timestamp.
+func get_path_segment_at(in_game_time: float) -> EventsStream.PathSegment:
+	var index := segments.find_custom(
+		func (seg: EventsStream.PathSegment) -> bool:
+			return in_game_time >= seg.start_time() && in_game_time <= seg.end_time()
+	)
+	
+	return segments[index] if index >= 0 else null
+
+
+### Returns the position at the given timestamp or default if there is no
+### segment at the given timestamp.
+func get_position_at_time(in_game_time: float, default: Vector2 = Vector2.ZERO) -> Vector2:
+	var segment := get_path_segment_at(in_game_time)
+	if segment == null:
+		return default
+	return segment.points[segment.index_at_time(in_game_time)]
